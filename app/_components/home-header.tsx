@@ -1,26 +1,25 @@
 import { Presentation } from "lucide-react";
 
 import { ModeToggle } from "@/components/theme/mode-toggle";
-import { Badge } from "@/components/ui/badge";
 
 export function HomeHeader() {
   return (
-    <header className="flex items-center justify-between gap-4">
-      <div className="flex min-w-0 items-center gap-3">
-        <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
-          <Presentation className="size-5" />
+    <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
+          <Presentation className="h-5 w-5" />
         </div>
-
-        <div className="min-w-0">
-          <h1 className="truncate text-lg font-bold tracking-tight">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
+            PNI
+          </p>
+          <h1 className="text-lg font-semibold tracking-tight">
             PNI PPT Generator
           </h1>
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
-        <ModeToggle />
-      </div>
+      <ModeToggle />
     </header>
   );
 }

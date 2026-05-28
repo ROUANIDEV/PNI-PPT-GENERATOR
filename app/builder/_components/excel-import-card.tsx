@@ -1,7 +1,7 @@
+import { FileSpreadsheet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FileDropZone } from "./file-drop-zone";
 
 type ExcelImportCardProps = {
   isImportingExcel: boolean;
@@ -21,79 +21,69 @@ export function ExcelImportCard({
   onDownloadTemplate,
 }: ExcelImportCardProps) {
   return (
-    <Card className="mb-6 rounded-2xl">
-      <CardHeader>
-        <CardTitle>2. Importer les données depuis Excel</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Importez un fichier Excel contenant les données PNI. Les données
-          importées restent modifiables dans les formulaires.
+    <Card className="overflow-hidden rounded-3xl border-border/70 shadow-sm">
+      <CardHeader className="space-y-2 bg-muted/20">
+        <div className="flex items-center gap-3">
+          <StepBadge>2</StepBadge>
+          <CardTitle>Importer les données depuis Excel</CardTitle>
+        </div>
+        <p className="text-sm leading-6 text-muted-foreground">
+          Importez un fichier Excel PNI. Les valeurs restent modifiables dans
+          les formulaires après importation.
         </p>
       </CardHeader>
-
-      <CardContent>
-        <div className="flex flex-wrap items-center gap-4">
-          <Label
-            htmlFor="excel-upload"
-            className="cursor-pointer rounded-xl border border-border bg-card px-5 py-3 text-sm font-medium shadow-sm hover:shadow-md hover:border-border/80 transition-all duration-200"
-          >
-            {isImportingExcel ? "Importation..." : "Choisir un fichier Excel"}
-          </Label>
-
-          <Button
-            type="button"
-            variant="outline"
-            className="rounded-xl"
-            onClick={onDownloadTemplate}
-          >
-            Télécharger modèle Excel
-          </Button>
-
-          <Input
-            id="excel-upload"
-            type="file"
-            accept=".xlsx,.xls"
-            className="hidden"
-            onChange={(event) => onUpload(event.target.files?.[0])}
-          />
-
-          {excelImportMessage ? (
-            <p className="text-sm font-medium text-green-600">
-              {excelImportMessage}
-            </p>
-          ) : null}
-
-          {excelImportError ? (
-            <p className="text-sm font-medium text-destructive">
-              {excelImportError}
-            </p>
-          ) : null}
-
-          <ExcelWarnings warnings={excelImportWarnings} />
-
-          {!excelImportMessage && !excelImportError ? (
-            <p className="text-sm text-muted-foreground">
-              Format accepté : .xlsx ou .xls
-            </p>
-          ) : null}
-        </div>
+      <CardContent className="space-y-4 p-4 sm:p-6">
+        <FileDropZone
+          title="Déposer le fichier Excel ici"
+          description="Compatible avec .xlsx et .xls. Le drag & drop et le bouton utilisent la même action."
+          accept=".xlsx,.xls"
+          buttonLabel={isImportingExcel ? "Importation..." : "Choisir un fichier Excel"}
+          disabled={isImportingExcel}
+          onFile={onUpload}
+        />
+        <Button
+          type="button"
+          variant="secondary"
+          className="w-full rounded-2xl sm:w-auto"
+          onClick={onDownloadTemplate}
+        >
+          <FileSpreadsheet className="mr-2 size-4" /> Télécharger modèle Excel
+        </Button>
+        <StatusMessage
+          success={excelImportMessage}
+          error={excelImportError}
+          warnings={excelImportWarnings}
+        />
       </CardContent>
     </Card>
   );
 }
 
-function ExcelWarnings({ warnings }: { warnings: string[] }) {
-  if (warnings.length === 0) return null;
-
+function StepBadge({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-full rounded-xl border border-yellow-500/40 bg-yellow-500/15 dark:bg-yellow-500/20 p-4 text-sm text-yellow-700 dark:text-yellow-300">
-      <p className="font-semibold">
-        Attention : certaines feuilles sont manquantes.
-      </p>
+    <span className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-primary text-sm font-bold text-primary-foreground">
+      {children}
+    </span>
+  );
+}
 
-      <ul className="mt-2 list-disc space-y-1 pl-5">
-        {warnings.map((warning) => (
-          <li key={warning}>{warning}</li>
-        ))}
+function StatusMessage({
+  success,
+  error,
+  warnings,
+}: {
+  success: string;
+  error: string;
+  warnings: string[];
+}) {
+  if (error) return <p className="rounded-2xl bg-destructive/10 p-3 text-sm text-destructive">{error}</p>;
+  if (success) return <p className="rounded-2xl bg-emerald-500/10 p-3 text-sm text-emerald-700">{success}</p>;
+  if (warnings.length === 0) return <p className="text-sm text-muted-foreground">Format accepté : .xlsx ou .xls</p>;
+  return (
+    <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm">
+      <p className="font-medium text-amber-800">Attention : feuilles manquantes.</p>
+      <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+        {warnings.map((warning) => <li key={warning}>{warning}</li>)}
       </ul>
     </div>
   );

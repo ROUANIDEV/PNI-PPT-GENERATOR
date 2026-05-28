@@ -2,10 +2,11 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
@@ -17,50 +18,84 @@ type ThemeContextValue = {
   toggleTheme: () => void;
 };
 
+const STORAGE_KEY = "pni-theme";
+const THEME_EVENT = "pni-theme-change";
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
+function isTheme(value: string | null): value is Theme {
+  return value === "light" || value === "dark";
+}
+
+function readTheme(): Theme {
+  if (typeof window === "undefined") return "light";
+
+  try {
+    const savedTheme = window.localStorage.getItem(STORAGE_KEY);
+    return isTheme(savedTheme) ? savedTheme : "light";
+  } catch {
+    return "light";
+  }
+}
+
+function getServerTheme(): Theme {
+  return "light";
+}
+
 function applyTheme(theme: Theme) {
+  if (typeof document === "undefined") return;
+
   document.documentElement.classList.toggle("dark", theme === "dark");
   document.documentElement.style.colorScheme = theme;
 }
 
+function subscribeTheme(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => undefined;
+
+  const notify = () => onStoreChange();
+  window.addEventListener("storage", notify);
+  window.addEventListener(THEME_EVENT, notify);
+  window.setTimeout(notify, 0);
+
+  return () => {
+    window.removeEventListener("storage", notify);
+    window.removeEventListener(THEME_EVENT, notify);
+  };
+}
+
+function saveTheme(theme: Theme) {
+  applyTheme(theme);
+
+  try {
+    window.localStorage.setItem(STORAGE_KEY, theme);
+  } catch {
+    // Keep the visual theme working even if localStorage is blocked.
+  }
+
+  window.dispatchEvent(new Event(THEME_EVENT));
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const theme = useSyncExternalStore(subscribeTheme, readTheme, getServerTheme);
 
   useEffect(() => {
-    const savedTheme = window.localStorage.getItem("pni-theme");
+    applyTheme(theme);
+  }, [theme]);
 
-    if (savedTheme === "dark" || savedTheme === "light") {
-      setThemeState(savedTheme);
-      applyTheme(savedTheme);
-      return;
-    }
-
-    applyTheme("light");
+  const setTheme = useCallback((nextTheme: Theme) => {
+    saveTheme(nextTheme);
   }, []);
 
-  function setTheme(nextTheme: Theme) {
-    setThemeState(nextTheme);
-    applyTheme(nextTheme);
-    window.localStorage.setItem("pni-theme", nextTheme);
-  }
-
-  function toggleTheme() {
-    setTheme(theme === "dark" ? "light" : "dark");
-  }
+  const toggleTheme = useCallback(() => {
+    const currentTheme = readTheme();
+    saveTheme(currentTheme === "dark" ? "light" : "dark");
+  }, []);
 
   const value = useMemo(
-    () => ({
-      theme,
-      setTheme,
-      toggleTheme,
-    }),
-    [theme]
+    () => ({ theme, setTheme, toggleTheme }),
+    [theme, setTheme, toggleTheme],
   );
 
-  return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useAppTheme() {

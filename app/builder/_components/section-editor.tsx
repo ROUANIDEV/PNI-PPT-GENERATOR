@@ -25,11 +25,11 @@ export function SectionEditor({
 }: SectionEditorProps) {
   if (!section) return null;
 
-  const sectionIndex = sections.findIndex((s) => s.key === section.key);
+  const sectionIndex = sections.findIndex((item) => item.key === section.key);
   const isFinalSection = sectionIndex === sections.length - 1;
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-4">
       <DynamicSectionRenderer
         section={section}
         sections={sections}
@@ -37,15 +37,14 @@ export function SectionEditor({
         allValues={report.values}
         onChange={(nextValue) => onChange(section.key, nextValue)}
       />
-      
-      {isFinalSection && (
+      {isFinalSection ? (
         <PowerPointGenerationCard
           templateFile={templateFile}
           generationError={generationError}
           isGeneratingPptx={isGeneratingPptx}
           onGenerate={onGeneratePPT}
         />
-      )}
+      ) : null}
     </div>
   );
 }

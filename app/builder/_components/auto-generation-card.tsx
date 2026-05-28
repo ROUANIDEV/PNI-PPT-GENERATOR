@@ -1,7 +1,12 @@
 import { Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type AutoGenerationCardProps = {
   suggestionMessage: string;
@@ -19,63 +24,58 @@ export function AutoGenerationCard({
   onGenerateWithGemini,
 }: AutoGenerationCardProps) {
   return (
-    <Card className="mb-6 rounded-2xl">
-      <CardHeader>
-        <CardTitle>3. Génération automatique</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          La génération locale analyse les taux faibles, les ruptures de stock,
-          les doses expirées, les pertes et les problèmes de chaîne de froid.
-        </p>
+    <Card className="border-border/70 bg-card/95 shadow-sm">
+      <CardHeader className="space-y-2">
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+          <Sparkles className="h-4 w-4" />
+          3. Génération automatique
+        </div>
+        <CardTitle className="text-xl">Suggestions intelligentes</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <div className="rounded-xl border border-yellow-500/40 bg-yellow-500/15 dark:bg-yellow-500/20 p-4 text-sm leading-6 text-yellow-700 dark:text-yellow-300">
-          <p className="font-semibold">Confidentialité</p>
-          <p className="mt-1">
+        <p className="text-sm leading-6 text-muted-foreground">
+          La génération locale analyse les taux faibles, les ruptures de stock,
+          les doses expirées, les pertes et les problèmes de chaîne de froid.
+        </p>
+
+        <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
+          <p className="text-sm font-medium text-foreground">Confidentialité</p>
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">
             La génération locale reste dans le navigateur. La génération Gemini
             est optionnelle et envoie les données du rapport au serveur de
-            l'application, puis à Google Gemini.
+            l&apos;application, puis à Google Gemini.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            className="rounded-xl"
-            onClick={onGenerateLocal}
-          >
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Button type="button" variant="secondary" onClick={onGenerateLocal}>
             Génération locale
           </Button>
-
           <Button
             type="button"
-            className="rounded-xl"
-            disabled={isGeneratingWithAi}
             onClick={onGenerateWithGemini}
+            disabled={isGeneratingWithAi}
           >
-            <Sparkles className="mr-2 size-4" />
-            {isGeneratingWithAi
-              ? "Génération Gemini..."
-              : "Générer avec Gemini"}
+            {isGeneratingWithAi ? "Génération Gemini..." : "Générer avec Gemini"}
           </Button>
-
-          {suggestionMessage ? (
-            <p className="text-sm font-medium text-green-600">
-              {suggestionMessage}
-            </p>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              Le texte généré restera modifiable par l’utilisateur.
-            </p>
-          )}
-
-          {aiGenerationError ? (
-            <p className="text-sm font-medium text-destructive">
-              {aiGenerationError}
-            </p>
-          ) : null}
         </div>
+
+        {suggestionMessage ? (
+          <div className="rounded-2xl border border-primary/25 bg-primary/5 p-4 text-sm leading-6 text-foreground">
+            {suggestionMessage}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Le texte généré restera modifiable par l&apos;utilisateur.
+          </p>
+        )}
+
+        {aiGenerationError ? (
+          <p className="rounded-2xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+            {aiGenerationError}
+          </p>
+        ) : null}
       </CardContent>
     </Card>
   );

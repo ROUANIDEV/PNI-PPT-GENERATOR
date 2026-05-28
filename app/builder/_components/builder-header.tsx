@@ -21,14 +21,7 @@ export function BuilderHeader() {
               Générateur PowerPoint PNI
             </h1>
 
-            <Badge variant="secondary" className="rounded-full">
-              Projet local
-            </Badge>
           </div>
-
-          <p className="mt-1 text-sm text-muted-foreground">
-            Interface en français pour remplir le modèle PowerPoint PNI.
-          </p>
         </div>
       </div>
 
@@ -40,9 +33,6 @@ export function BuilderHeader() {
 
           <div>
             <p className="text-sm font-semibold">PNI PPT Generator</p>
-            <p className="text-xs text-muted-foreground">
-              Local par défaut · Gemini optionnel
-            </p>
           </div>
         </div>
 
