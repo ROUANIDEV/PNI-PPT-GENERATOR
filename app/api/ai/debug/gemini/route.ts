@@ -22,7 +22,7 @@ function errorToJson(error: unknown) {
 
 export async function GET() {
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY?.trim();
     const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
     if (!apiKey) {
