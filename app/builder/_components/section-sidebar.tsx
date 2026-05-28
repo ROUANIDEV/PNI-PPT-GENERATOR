@@ -33,10 +33,10 @@ export function SectionSidebar({
                 key={section.key}
                 type="button"
                 onClick={() => onSelectSection(section.key)}
-                className={`w-full rounded-xl border p-4 text-left transition ${
+                className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ${
                   isActive
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "bg-background hover:bg-accent hover:text-accent-foreground"
+                    ? "border-primary bg-primary text-primary-foreground shadow-md"
+                    : "border-border bg-card hover:bg-muted/50 hover:border-border/80 shadow-sm hover:shadow-md"
                 }`}
               >
                 <div className="flex items-center justify-between gap-3">
