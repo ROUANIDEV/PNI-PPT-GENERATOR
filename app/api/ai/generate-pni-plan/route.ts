@@ -20,6 +20,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function getSafeErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return "Unknown Gemini error";
+}
+
+function getSafeErrorName(error: unknown): string {
+  if (error instanceof Error) return error.name;
+  return "UnknownError";
+}
+
 function getReportData(body: unknown): unknown {
   if (!isRecord(body)) return body;
 
@@ -388,16 +398,32 @@ export async function POST(request: Request) {
     let usedFallback = false;
 
     try {
-      const geminiResult = await generatePniPlan(prompt, apiKey);
+  const geminiResult = await generatePniPlan(prompt, apiKey);
 
-      result = geminiResult.plan;
-      modelUsed = geminiResult.model;
-    } catch (error) {
-      console.error("Gemini unavailable, using local fallback:", error);
+  result = geminiResult.plan;
+  modelUsed = geminiResult.model;
+} catch (error) {
+  console.error("Gemini unavailable:", {
+    name: getSafeErrorName(error),
+    message: getSafeErrorMessage(error),
+    status: getErrorStatus(error),
+  });
 
-      result = buildLocalFallbackPlan();
-      usedFallback = true;
-    }
+  return Response.json(
+    {
+      error: "Gemini unavailable on server.",
+      details: {
+        name: getSafeErrorName(error),
+        message: getSafeErrorMessage(error),
+        status: getErrorStatus(error),
+      },
+      meta: {
+        usedFallback: false,
+      },
+    },
+    { status: 502 }
+  );
+}
 
     const problems = normalizeItems(result.problems);
     const activities = normalizeItems(result.activities);
