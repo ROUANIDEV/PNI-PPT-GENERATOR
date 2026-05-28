@@ -32,18 +32,18 @@ const features = [
 
 export function HomeFeatureGrid() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
       {features.map((feature) => {
         const Icon = feature.icon;
 
         return (
-          <Card key={feature.title} className="rounded-2xl hover:shadow-lg transition-all duration-200">
-            <CardContent className="p-6">
-              <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 mb-4 w-fit">
+          <Card key={feature.title} className="rounded-2xl hover:shadow-lg transition-all duration-200 hover:border-border/80 group">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 mb-3 sm:mb-4 w-fit group-hover:bg-primary/15 transition-colors">
                 <Icon className="size-5 text-primary" />
               </div>
-              <p className="font-bold text-foreground">{feature.title}</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              <p className="font-bold text-sm sm:text-base text-foreground">{feature.title}</p>
+              <p className="mt-1 sm:mt-2 text-xs sm:text-sm leading-6 text-muted-foreground">
                 {feature.description}
               </p>
             </CardContent>

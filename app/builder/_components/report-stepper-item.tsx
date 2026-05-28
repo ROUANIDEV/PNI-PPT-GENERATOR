@@ -31,18 +31,18 @@ export function ReportStepperItem({
       variant="ghost"
       aria-current={active ? "step" : undefined}
       onClick={onClick}
-      className={`h-auto min-w-[140px] justify-start rounded-2xl border p-2 text-left transition sm:min-w-[190px] sm:p-3 ${stateClass}`}
+      className={`h-auto min-w-[120px] justify-start rounded-xl sm:rounded-2xl border p-1.5 sm:p-2 md:p-3 text-left transition hover:shadow-sm active:scale-95 sm:min-w-[160px] ${stateClass}`}
     >
-      <span className="flex w-full items-start gap-2 sm:gap-3">
+      <span className="flex w-full items-start gap-1.5 sm:gap-2 md:gap-3">
         <StepIcon active={active} completed={completed} order={section.order} />
         <span className="min-w-0 flex-1">
-          <span className="block text-[10px] font-semibold uppercase opacity-80 sm:text-xs">
-            Étape {index + 1}
+          <span className="block text-[9px] sm:text-[10px] md:text-xs font-semibold uppercase opacity-75 sm:opacity-80">
+            Step {index + 1}
           </span>
-          <span className="mt-0.5 block truncate text-xs font-bold sm:mt-1 sm:text-sm">
+          <span className="mt-0.5 block truncate text-[10px] sm:text-xs md:text-sm font-bold">
             {section.title}
           </span>
-          <span className="mt-0.5 hidden text-xs capitalize opacity-75 sm:block">
+          <span className="mt-0.5 hidden text-[9px] sm:text-xs capitalize opacity-70 sm:block">
             {section.type}
           </span>
         </span>
@@ -65,8 +65,8 @@ function StepIcon({ active, completed, order }: StepIconProps) {
       : "bg-muted text-muted-foreground";
 
   return (
-    <span className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold sm:size-9 ${className}`}>
-      {completed ? <Check className="size-4" /> : active ? order : <Circle className="size-4" />}
+    <span className={`flex size-6 sm:size-7 md:size-8 shrink-0 items-center justify-center rounded-full text-[10px] sm:text-xs font-bold ${className}`}>
+      {completed ? <Check className="size-3.5 sm:size-4" /> : active ? order : <Circle className="size-3 sm:size-3.5" />}
     </span>
   );
 }
