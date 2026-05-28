@@ -103,7 +103,7 @@ function DynamicInput({
 
         onChange(nextValue);
       }}
-      className={field.readonly ? "bg-slate-100 font-semibold" : ""}
+      className={field.readonly ? "bg-muted/50 font-semibold cursor-not-allowed dark:bg-muted/40" : ""}
     />
   );
 }
@@ -192,16 +192,16 @@ function TableSectionRenderer({
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border">
+    <div className="overflow-x-auto rounded-2xl border border-border shadow-sm">
       <table className="w-full min-w-[900px] border-collapse text-sm">
         <thead>
-          <tr className="bg-slate-100">
-            <th className="border p-3 text-left font-bold">
+          <tr className="bg-muted/60 dark:bg-muted/40">
+            <th className="border border-border p-3 text-left font-bold text-foreground">
               {section.rowHeader}
             </th>
 
             {section.columns.map((column) => (
-              <th key={column.key} className="border p-3 text-left font-bold">
+              <th key={column.key} className="border border-border p-3 text-left font-bold text-foreground">
                 {column.label}
               </th>
             ))}
@@ -210,13 +210,13 @@ function TableSectionRenderer({
 
         <tbody>
           {tableValue.rows.map((row, rowIndex) => (
-            <tr key={row.rowKey}>
-              <td className="border bg-white p-3 font-semibold">
+            <tr key={row.rowKey} className="hover:bg-muted/30 transition-colors">
+              <td className="border border-border bg-card p-3 font-semibold text-foreground">
                 {row.rowLabel}
               </td>
 
               {section.columns.map((column) => (
-                <td key={column.key} className="border bg-white p-2">
+                <td key={column.key} className="border border-border bg-card p-2 hover:bg-muted/40 transition-colors">
                   <DynamicInput
                     field={column}
                     value={row.values[column.key]}
@@ -232,7 +232,7 @@ function TableSectionRenderer({
       </table>
 
       {section.autoCalculateRate ? (
-        <div className="border-t bg-slate-50 p-3 text-sm text-muted-foreground">
+        <div className="border-t border-border bg-muted/40 p-3 text-sm text-muted-foreground dark:bg-muted/30">
           Le taux est calculé automatiquement : réalisation / objectif × 100.
         </div>
       ) : null}
@@ -273,14 +273,14 @@ function MatrixSectionRenderer({
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border">
+    <div className="overflow-x-auto rounded-2xl border border-border shadow-sm">
       <table className="w-full min-w-[1000px] border-collapse text-sm">
         <thead>
-          <tr className="bg-slate-100">
-            <th className="border p-3 text-left font-bold">Ligne</th>
+          <tr className="bg-muted/60 dark:bg-muted/40">
+            <th className="border border-border p-3 text-left font-bold text-foreground">Ligne</th>
 
             {section.columns.map((column) => (
-              <th key={column.key} className="border p-3 text-center font-bold">
+              <th key={column.key} className="border border-border p-3 text-center font-bold text-foreground">
                 {column.label}
               </th>
             ))}
@@ -289,13 +289,13 @@ function MatrixSectionRenderer({
 
         <tbody>
           {matrixValue.rows.map((row, rowIndex) => (
-            <tr key={row.rowKey}>
-              <td className="border bg-white p-3 font-semibold">
+            <tr key={row.rowKey} className="hover:bg-muted/30 transition-colors">
+              <td className="border border-border bg-card p-3 font-semibold text-foreground">
                 {row.rowLabel}
               </td>
 
               {section.columns.map((column) => (
-                <td key={column.key} className="border bg-white p-2">
+                <td key={column.key} className="border border-border bg-card p-2 hover:bg-muted/40 transition-colors">
                   <Input
                     type="number"
                     value={String(row.values[column.key] ?? 0)}
