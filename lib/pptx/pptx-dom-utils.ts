@@ -1,5 +1,9 @@
 const A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main";
 
+type TextRunOptions = {
+  bold?: boolean;
+};
+
 export function getSlideXmlPath(slideIndex: number) {
   return `ppt/slides/slide${slideIndex + 1}.xml`;
 }
@@ -20,24 +24,39 @@ function getFirstElement(parent: Element | Document, tagName: string) {
   return getElements(parent, tagName)[0] ?? null;
 }
 
-function removeChildren(element: Element) {
-  while (element.firstChild) {
-    element.removeChild(element.firstChild);
+function applyRunOptions(
+  document: Document,
+  run: Element,
+  sourceRun?: Element | null,
+  options?: TextRunOptions
+) {
+  const sourceRunProperties = sourceRun?.getElementsByTagName("a:rPr")[0];
+  let runProperties: Element | null = null;
+
+  if (sourceRunProperties) {
+    runProperties = sourceRunProperties.cloneNode(true) as Element;
+  } else if (options?.bold) {
+    runProperties = document.createElementNS(A_NS, "a:rPr");
+  }
+
+  if (runProperties && options?.bold) {
+    runProperties.setAttribute("b", "1");
+  }
+
+  if (runProperties) {
+    run.appendChild(runProperties);
   }
 }
 
 function createTextRun(
   document: Document,
   text: string,
-  sourceRun?: Element | null
+  sourceRun?: Element | null,
+  options?: TextRunOptions
 ) {
   const run = document.createElementNS(A_NS, "a:r");
 
-  const sourceRunProperties = sourceRun?.getElementsByTagName("a:rPr")[0];
-
-  if (sourceRunProperties) {
-    run.appendChild(sourceRunProperties.cloneNode(true));
-  }
+  applyRunOptions(document, run, sourceRun, options);
 
   const textElement = document.createElementNS(A_NS, "a:t");
   textElement.textContent = text;
@@ -47,7 +66,11 @@ function createTextRun(
   return run;
 }
 
-function setTextBodyText(textBody: Element, text: string) {
+function setTextBodyText(
+  textBody: Element,
+  text: string,
+  options?: TextRunOptions
+) {
   const document = textBody.ownerDocument;
 
   const oldParagraphs = Array.from(textBody.children).filter((child) => {
@@ -72,7 +95,7 @@ function setTextBodyText(textBody: Element, text: string) {
       paragraph.appendChild(firstParagraphProperties.cloneNode(true));
     }
 
-    paragraph.appendChild(createTextRun(document, line, firstRun));
+    paragraph.appendChild(createTextRun(document, line, firstRun, options));
     textBody.appendChild(paragraph);
   }
 }
@@ -80,7 +103,8 @@ function setTextBodyText(textBody: Element, text: string) {
 export function setShapeTextByExistingText(
   slideXml: string,
   existingText: string,
-  newText: string
+  newText: string,
+  options?: TextRunOptions
 ) {
   const document = parseXml(slideXml);
   const shapes = getElements(document, "p:sp");
@@ -93,12 +117,14 @@ export function setShapeTextByExistingText(
     }
 
     const textElements = getElements(textBody, "a:t");
+
     const fullText = textElements
       .map((item) => item.textContent ?? "")
       .join("");
 
     if (fullText.includes(existingText)) {
-      setTextBodyText(textBody, newText);
+      setTextBodyText(textBody, newText, options);
+
       return serializeXml(document);
     }
   }
@@ -111,7 +137,8 @@ export function setTableCellText(
   tableIndex: number,
   rowIndex: number,
   columnIndex: number,
-  text: string
+  text: string,
+  options?: TextRunOptions
 ) {
   const document = parseXml(slideXml);
   const tables = getElements(document, "a:tbl");
@@ -148,7 +175,7 @@ export function setTableCellText(
     cell.appendChild(textBody);
   }
 
-  setTextBodyText(textBody, text);
+  setTextBodyText(textBody, text, options);
 
   return serializeXml(document);
 }

@@ -197,35 +197,38 @@ async function fillTableSection(
     let nextXml = xml;
 
     tableValue.rows.forEach((row, rowIndex) => {
-  const pptxRowIndex = rowIndex + 1;
-  const firstColumnIsData = section.columns[0]?.key === "centerName";
+      const pptxRowIndex = rowIndex + 1;
+      const firstColumnIsData = section.columns[0]?.key === "centerName";
 
-  if (!firstColumnIsData) {
-    nextXml = setTableCellText(
-      nextXml,
-      tableIndex,
-      pptxRowIndex,
-      0,
-      row.rowLabel
-    );
-  }
+      if (!firstColumnIsData) {
+        nextXml = setTableCellText(
+          nextXml,
+          tableIndex,
+          pptxRowIndex,
+          0,
+          row.rowLabel
+        );
+      }
 
-  section.columns.forEach((column, columnIndex) => {
-    const pptxColumnIndex = firstColumnIsData
-      ? columnIndex
-      : columnIndex + 1;
+      section.columns.forEach((column, columnIndex) => {
+        const pptxColumnIndex = firstColumnIsData
+          ? columnIndex
+          : columnIndex + 1;
 
-    const cellValue = row.values[column.key];
+        const cellValue = row.values[column.key];
 
-    nextXml = setTableCellText(
-      nextXml,
-      tableIndex,
-      pptxRowIndex,
-      pptxColumnIndex,
-      formatCellValue(column.key, cellValue)
-    );
-  });
-});
+        nextXml = setTableCellText(
+          nextXml,
+          tableIndex,
+          pptxRowIndex,
+          pptxColumnIndex,
+          formatCellValue(column.key, cellValue),
+          {
+            bold: column.key === "taux",
+          }
+        );
+      });
+    });
 
     return nextXml;
   });
