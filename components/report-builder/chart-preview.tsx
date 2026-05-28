@@ -107,7 +107,7 @@ export function ChartPreview({ section, sections, allValues }: Props) {
 
   if (!sourceSection || !isMatrixValue(sourceValue)) {
     return (
-      <div className="rounded-2xl border bg-slate-50 p-6 text-sm text-muted-foreground">
+      <div className="rounded-2xl border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
         Impossible de générer le graphique. La section source est introuvable.
       </div>
     );
@@ -118,7 +118,7 @@ export function ChartPreview({ section, sections, allValues }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border bg-white p-4">
+      <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
         <ChartContainer config={chartConfig} className="h-[380px] w-full">
           {section.chartType === "bar" ? (
             <BarChart data={chartData}>

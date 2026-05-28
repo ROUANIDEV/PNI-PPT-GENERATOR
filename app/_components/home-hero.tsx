@@ -21,28 +21,28 @@ export function HomeHero() {
       <div className="mt-8 flex flex-wrap gap-3">
         <Link
           href="/builder"
-          className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90"
+          className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-md hover:shadow-lg hover:bg-primary/90 transition-all duration-200"
         >
           Start new report
         </Link>
 
         <Link
           href="/builder"
-          className="inline-flex h-11 items-center justify-center rounded-xl border bg-background px-6 text-sm font-semibold shadow-sm transition hover:bg-accent hover:text-accent-foreground"
+          className="inline-flex h-11 items-center justify-center rounded-xl border border-border bg-card px-6 text-sm font-semibold shadow-sm hover:shadow-md hover:border-primary/50 hover:bg-primary/5 transition-all duration-200"
         >
           Open builder
         </Link>
       </div>
 
-      <Card className="mt-8 max-w-2xl rounded-2xl">
-        <CardContent className="flex gap-4 p-5">
+      <Card className="mt-8 max-w-2xl rounded-2xl bg-secondary/5 border-secondary/20">
+        <CardContent className="flex gap-4 p-6">
           <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
             <ShieldCheck className="size-5" />
           </div>
 
           <div>
-            <p className="font-bold">Privacy mode is explicit</p>
-            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+            <p className="font-bold text-foreground">Privacy mode is explicit</p>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Manual editing, Excel import, local suggestions, and PPTX
               generation run in the browser. Gemini is optional and sends
               report data through the app API to Google Gemini.

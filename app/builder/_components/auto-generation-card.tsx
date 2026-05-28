@@ -29,12 +29,12 @@ export function AutoGenerationCard({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <div className="rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm leading-6 text-yellow-700 dark:text-yellow-200">
+        <div className="rounded-xl border border-yellow-500/40 bg-yellow-500/15 dark:bg-yellow-500/20 p-4 text-sm leading-6 text-yellow-700 dark:text-yellow-300">
           <p className="font-semibold">Confidentialité</p>
           <p className="mt-1">
             La génération locale reste dans le navigateur. La génération Gemini
             est optionnelle et envoie les données du rapport au serveur de
-            l’application, puis à Google Gemini.
+            l'application, puis à Google Gemini.
           </p>
         </div>
 

@@ -34,7 +34,7 @@ export function ExcelImportCard({
         <div className="flex flex-wrap items-center gap-4">
           <Label
             htmlFor="excel-upload"
-            className="cursor-pointer rounded-xl border bg-background px-5 py-3 text-sm font-medium shadow-sm transition hover:bg-accent hover:text-accent-foreground"
+            className="cursor-pointer rounded-xl border border-border bg-card px-5 py-3 text-sm font-medium shadow-sm hover:shadow-md hover:border-border/80 transition-all duration-200"
           >
             {isImportingExcel ? "Importation..." : "Choisir un fichier Excel"}
           </Label>
@@ -85,7 +85,7 @@ function ExcelWarnings({ warnings }: { warnings: string[] }) {
   if (warnings.length === 0) return null;
 
   return (
-    <div className="w-full rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-yellow-700 dark:text-yellow-200">
+    <div className="w-full rounded-xl border border-yellow-500/40 bg-yellow-500/15 dark:bg-yellow-500/20 p-4 text-sm text-yellow-700 dark:text-yellow-300">
       <p className="font-semibold">
         Attention : certaines feuilles sont manquantes.
       </p>

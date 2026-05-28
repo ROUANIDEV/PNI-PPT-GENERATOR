@@ -32,7 +32,7 @@ export function TemplateUploadCard({
         <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
           <Label
             htmlFor="template-upload"
-            className="flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed bg-background p-6 text-center transition hover:bg-accent hover:text-accent-foreground"
+            className="flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border/50 bg-muted/20 p-6 text-center transition hover:bg-muted/40 hover:border-border/80 hover:text-foreground"
           >
             <UploadCloud className="mb-4 size-9 text-muted-foreground" />
 
@@ -60,7 +60,7 @@ export function TemplateUploadCard({
             />
           </Label>
 
-          <div className="rounded-2xl border bg-muted p-5 text-muted-foreground">
+          <div className="rounded-2xl border border-border bg-card p-5 text-muted-foreground shadow-sm">
             {templateFile ? (
               <LoadedTemplate file={templateFile} />
             ) : (
@@ -68,7 +68,7 @@ export function TemplateUploadCard({
             )}
 
             {uploadError ? (
-              <p className="mt-4 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+              <p className="mt-4 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive dark:bg-destructive/15 dark:border-destructive/40">
                 {uploadError}
               </p>
             ) : null}
