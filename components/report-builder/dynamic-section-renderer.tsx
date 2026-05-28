@@ -96,9 +96,11 @@ function DynamicInput({
       type={field.inputType === "date" ? "date" : isNumber ? "number" : "text"}
       value={getInputValue(value)}
       disabled={field.readonly}
+      min={isNumber ? "0" : undefined}
+      step={isNumber ? "0.01" : undefined}
       onChange={(event) => {
         const nextValue = isNumber
-          ? toNumber(event.target.value)
+          ? Math.max(0, toNumber(event.target.value))
           : event.target.value;
 
         onChange(nextValue);
@@ -194,17 +196,17 @@ function TableSectionRenderer({
   return (
     <div className="space-y-4">
       {/* Desktop table view */}
-      <div className="hidden md:block overflow-x-auto rounded-2xl border border-border/60 shadow-md bg-card/30 backdrop-blur-sm">
+      <div className="hidden md:block overflow-x-auto rounded-xl border border-border/50 shadow-sm">
         <table className="w-full border-collapse text-sm">
           <thead>
-            <tr className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-b border-border/40">
-              <th className="border-r border-border/30 p-4 text-left font-bold text-foreground">
+            <tr className="bg-gradient-to-r from-primary/8 to-transparent border-b border-border/40">
+              <th className="min-w-[150px] border-r border-border/30 px-4 py-3 text-left font-semibold text-foreground">
                 {section.rowHeader}
               </th>
 
               {section.columns.map((column) => (
-                <th key={column.key} className="border-r border-border/30 p-4 text-left font-bold text-foreground last:border-r-0">
-                  {column.label}
+                <th key={column.key} className="min-w-[120px] border-r border-border/30 px-4 py-3 text-left font-semibold text-foreground last:border-r-0">
+                  <span className="block">{column.label}</span>
                 </th>
               ))}
             </tr>
@@ -212,20 +214,22 @@ function TableSectionRenderer({
 
           <tbody>
             {tableValue.rows.map((row, rowIndex) => (
-              <tr key={row.rowKey} className="border-b border-border/30 hover:bg-primary/5 transition-colors duration-150">
-                <td className="border-r border-border/20 bg-muted/20 p-4 font-semibold text-foreground">
+              <tr key={row.rowKey} className={`border-b border-border/20 hover:bg-muted/40 transition-colors ${rowIndex % 2 === 0 ? 'bg-muted/15' : 'bg-muted/5'}`}>
+                <td className="border-r border-border/20 bg-muted/30 px-4 py-3 font-medium text-foreground">
                   {row.rowLabel}
                 </td>
 
                 {section.columns.map((column) => (
-                  <td key={column.key} className="border-r border-border/20 p-3 hover:bg-muted/30 transition-colors duration-150 last:border-r-0">
-                    <DynamicInput
-                      field={column}
-                      value={row.values[column.key]}
-                      onChange={(nextValue) =>
-                        updateCell(rowIndex, column, nextValue)
-                      }
-                    />
+                  <td key={column.key} className="border-r border-border/20 px-3 py-2.5 hover:bg-primary/5 transition-colors last:border-r-0">
+                    <div className="min-h-10">
+                      <DynamicInput
+                        field={column}
+                        value={row.values[column.key]}
+                        onChange={(nextValue) =>
+                          updateCell(rowIndex, column, nextValue)
+                        }
+                      />
+                    </div>
                   </td>
                 ))}
               </tr>
@@ -237,24 +241,26 @@ function TableSectionRenderer({
       {/* Mobile card view */}
       <div className="space-y-3 md:hidden">
         {tableValue.rows.map((row, rowIndex) => (
-          <div key={row.rowKey} className="rounded-2xl border border-border/60 bg-card/50 p-4 shadow-md hover:shadow-lg transition-shadow">
-            <h3 className="mb-4 font-bold text-foreground text-base flex items-center gap-2">
-              <span className="inline-block size-1.5 rounded-full bg-primary" />
+          <div key={row.rowKey} className="rounded-xl border border-border/50 bg-card p-4 shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="mb-4 flex items-center gap-2 text-base font-semibold text-foreground">
+              <span className="inline-block size-2 rounded-full bg-primary" />
               {row.rowLabel}
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {section.columns.map((column) => (
                 <div key={column.key} className="space-y-1.5">
-                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-0.5">
                     {column.label}
                   </label>
-                  <DynamicInput
-                    field={column}
-                    value={row.values[column.key]}
-                    onChange={(nextValue) =>
-                      updateCell(rowIndex, column, nextValue)
-                    }
-                  />
+                  <div className="min-h-10">
+                    <DynamicInput
+                      field={column}
+                      value={row.values[column.key]}
+                      onChange={(nextValue) =>
+                        updateCell(rowIndex, column, nextValue)
+                      }
+                    />
+                  </div>
                 </div>
               ))}
             </div>
@@ -307,15 +313,15 @@ function MatrixSectionRenderer({
   return (
     <div className="space-y-4">
       {/* Desktop table view */}
-      <div className="hidden md:block overflow-x-auto rounded-2xl border border-border/60 shadow-md bg-card/30 backdrop-blur-sm">
+      <div className="hidden md:block overflow-x-auto rounded-xl border border-border/50 shadow-sm">
         <table className="w-full border-collapse text-sm">
           <thead>
-            <tr className="bg-gradient-to-r from-accent/10 via-accent/5 to-transparent border-b border-border/40">
-              <th className="border-r border-border/30 p-4 text-left font-bold text-foreground">Ligne</th>
+            <tr className="bg-gradient-to-r from-accent/8 to-transparent border-b border-border/40">
+              <th className="min-w-[150px] border-r border-border/30 px-4 py-3 text-left font-semibold text-foreground">Ligne</th>
 
               {section.columns.map((column) => (
-                <th key={column.key} className="border-r border-border/30 p-4 text-center font-bold text-foreground last:border-r-0">
-                  {column.label}
+                <th key={column.key} className="min-w-[100px] border-r border-border/30 px-4 py-3 text-center font-semibold text-foreground last:border-r-0">
+                  <span className="block">{column.label}</span>
                 </th>
               ))}
             </tr>
@@ -323,24 +329,28 @@ function MatrixSectionRenderer({
 
           <tbody>
             {matrixValue.rows.map((row, rowIndex) => (
-              <tr key={row.rowKey} className="border-b border-border/30 hover:bg-accent/5 transition-colors duration-150">
-                <td className="border-r border-border/20 bg-muted/20 p-4 font-semibold text-foreground">
+              <tr key={row.rowKey} className={`border-b border-border/20 hover:bg-muted/40 transition-colors ${rowIndex % 2 === 0 ? 'bg-muted/15' : 'bg-muted/5'}`}>
+                <td className="border-r border-border/20 bg-muted/30 px-4 py-3 font-medium text-foreground">
                   {row.rowLabel}
                 </td>
 
                 {section.columns.map((column) => (
-                  <td key={column.key} className="border-r border-border/20 p-3 hover:bg-muted/30 transition-colors duration-150 last:border-r-0">
-                    <Input
-                      type="number"
-                      value={String(row.values[column.key] ?? 0)}
-                      onChange={(event) =>
-                        updateCell(
-                          rowIndex,
-                          column.key,
-                          toNumber(event.target.value)
-                        )
-                      }
-                    />
+                  <td key={column.key} className="border-r border-border/20 px-3 py-2.5 hover:bg-accent/5 transition-colors last:border-r-0">
+                    <div className="min-h-10">
+                      <Input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={String(Math.max(0, row.values[column.key] ?? 0))}
+                        onChange={(event) =>
+                          updateCell(
+                            rowIndex,
+                            column.key,
+                            Math.max(0, toNumber(event.target.value))
+                          )
+                        }
+                      />
+                    </div>
                   </td>
                 ))}
               </tr>
@@ -352,28 +362,32 @@ function MatrixSectionRenderer({
       {/* Mobile card view */}
       <div className="space-y-3 md:hidden">
         {matrixValue.rows.map((row, rowIndex) => (
-          <div key={row.rowKey} className="rounded-2xl border border-border/60 bg-card/50 p-4 shadow-md hover:shadow-lg transition-shadow">
-            <h3 className="mb-4 font-bold text-foreground text-base flex items-center gap-2">
-              <span className="inline-block size-1.5 rounded-full bg-accent" />
+          <div key={row.rowKey} className="rounded-xl border border-border/50 bg-card p-4 shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="mb-4 flex items-center gap-2 text-base font-semibold text-foreground">
+              <span className="inline-block size-2 rounded-full bg-accent" />
               {row.rowLabel}
             </h3>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
               {section.columns.map((column) => (
                 <div key={column.key} className="space-y-1.5">
-                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-0.5">
                     {column.label}
                   </label>
-                  <Input
-                    type="number"
-                    value={String(row.values[column.key] ?? 0)}
-                    onChange={(event) =>
-                      updateCell(
-                        rowIndex,
-                        column.key,
-                        toNumber(event.target.value)
-                      )
-                    }
-                  />
+                  <div className="min-h-10">
+                    <Input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={String(Math.max(0, row.values[column.key] ?? 0))}
+                      onChange={(event) =>
+                        updateCell(
+                          rowIndex,
+                          column.key,
+                          Math.max(0, toNumber(event.target.value))
+                        )
+                      }
+                    />
+                  </div>
                 </div>
               ))}
             </div>

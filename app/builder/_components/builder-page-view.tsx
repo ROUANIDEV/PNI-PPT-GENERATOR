@@ -6,7 +6,6 @@ import { AutoGenerationCard } from "./auto-generation-card";
 import { BuilderHeader } from "./builder-header";
 import { BuilderRouteBanner } from "./builder-route-banner";
 import { ExcelImportCard } from "./excel-import-card";
-import { PowerPointGenerationCard } from "./powerpoint-generation-card";
 import { ReportJsonDetails } from "./report-json-details";
 import { SectionEditor } from "./section-editor";
 import { SectionNavigation } from "./section-navigation";
@@ -58,6 +57,10 @@ export function BuilderPageView() {
               section={builder.activeSection}
               sections={builder.sections}
               report={builder.report}
+              templateFile={builder.templateFile}
+              generationError={builder.generationError}
+              isGeneratingPptx={builder.isGeneratingPptx}
+              onGeneratePPT={builder.handleGeneratePowerPoint}
               onChange={builder.updateSectionValue}
             />
 
@@ -66,13 +69,6 @@ export function BuilderPageView() {
               sectionsCount={builder.sections.length}
               onPrevious={builder.goToPreviousSection}
               onNext={builder.goToNextSection}
-            />
-
-            <PowerPointGenerationCard
-              templateFile={builder.templateFile}
-              generationError={builder.generationError}
-              isGeneratingPptx={builder.isGeneratingPptx}
-              onGenerate={builder.handleGeneratePowerPoint}
             />
 
             <Separator />
